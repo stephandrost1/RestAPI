@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CompanyController;
 use App\Http\Controllers\API\EmployeeController;
 use App\Http\Resources\CompanyCollection;
@@ -24,5 +25,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('v1/companies', CompanyController::class)->middleware('ForceJSONResponse');
-Route::resource('v1/employees', EmployeeController::class)->middleware('ForceJSONResponse');
+Route::resource('v1/companies', CompanyController::class)->middleware('ForceJSONResponse', 'auth:sanctum');
+Route::resource('v1/employees', EmployeeController::class)->middleware('ForceJSONResponse', 'auth:sanctum');
+
+
+Route::post('/auth/register', [AuthController::class, 'createUser'])->middleware('ForceJSONResponse');
+Route::post('/auth/login', [AuthController::class, 'loginUser'])->middleware('ForceJSONResponse');
